@@ -51,13 +51,7 @@ var XXX_GoogleMapsAPI_GeocoderService =
 	},
 		
 	lookupGeoPosition: function (latitude, longitude, locationBias, completedCallback, failedCallback)
-	{
-		var geoPosition =
-		{
-			latitude: latitude,
-			longitude: longitude
-		};
-		
+	{		
 		var nativeGeoPosition = new google.maps.LatLng(XXX_Type.makeFloat(latitude), XXX_Type.makeFloat(longitude));
 		
 		var data = {};
@@ -107,8 +101,8 @@ var XXX_GoogleMapsAPI_GeocoderService =
 				lookupType: 'geoPosition',
 				latitude: latitude,
 				longitude: longitude,
-				geoPosition: geoPosition,
 				nativeGeoPosition: nativeGeoPosition,
+				languageCode: XXX_HTTP_Browser.firstLanguage.languageCode,
 				locationBias: locationBias,
 				completedCallback: false,
 				failedCallback: false,
@@ -197,6 +191,7 @@ var XXX_GoogleMapsAPI_GeocoderService =
 			{
 				lookupType: 'rawAddressString',
 				rawAddressString: rawAddressString,
+				languageCode: XXX_HTTP_Browser.firstLanguage.languageCode,
 				locationBias: locationBias,
 				completedCallback: false,
 				failedCallback: false,
@@ -250,7 +245,9 @@ var XXX_GoogleMapsAPI_GeocoderService =
 					
 					var extraInformation =
 					{
-						locationBias: this.geocoderRequestObjects[geocoderRequestObjectIndex].locationBias
+						lookupType: this.geocoderRequestObjects[geocoderRequestObjectIndex].lookupType,
+						locationBias: this.geocoderRequestObjects[geocoderRequestObjectIndex].locationBias,
+						languageCode: this.geocoderRequestObjects[geocoderRequestObjectIndex].languageCode
 					};
 					
 					if (this.geocoderRequestObjects[geocoderRequestObjectIndex].lookupType == 'rawAddressString')
@@ -259,10 +256,10 @@ var XXX_GoogleMapsAPI_GeocoderService =
 					}
 					else if (this.geocoderRequestObjects[geocoderRequestObjectIndex].lookupType == 'geoPosition')
 					{
-						extraInformation.geoPosition = this.geocoderRequestObjects[geocoderRequestObjectIndex].geoPosition;
+						extraInformation.latitude = this.geocoderRequestObjects[geocoderRequestObjectIndex].latitude;
+						extraInformation.longitude = this.geocoderRequestObjects[geocoderRequestObjectIndex].longitude;
 					}
-					
-					
+										
 					var parsedGeocoderResults = this.parseGeocoderResponse(results, extraInformation);
 					
 					if (parsedGeocoderResults)
@@ -341,7 +338,7 @@ var XXX_GoogleMapsAPI_GeocoderService =
 				latitude: 0,
 				longitude: 0,
 				types: [],
-				houseNumber: '',
+				streetNumber: '',
 				street: '',
 				city: '',
 				stateOrProvince: '',
@@ -383,7 +380,7 @@ var XXX_GoogleMapsAPI_GeocoderService =
 			{
 				result.precisionType = geocoderResult.geometry.location_type;
 			}
-						
+			
 			for (var i = 0, iEnd = XXX_Array.getFirstLevelItemTotal(geocoderResult.address_components); i < iEnd; ++i)
 			{
 				var address_component = geocoderResult.address_components[i];
@@ -394,7 +391,7 @@ var XXX_GoogleMapsAPI_GeocoderService =
 					
 					if (type == 'street_number')
 					{
-						result.houseNumber = address_component.long_name;
+						result.streetNumber = address_component.long_name;
 					}
 					else if (type == 'route')
 					{
@@ -418,8 +415,7 @@ var XXX_GoogleMapsAPI_GeocoderService =
 					{
 						result.postalCode = address_component.short_name;
 					}
-				}
-				
+				}				
 			}
 		}
 		

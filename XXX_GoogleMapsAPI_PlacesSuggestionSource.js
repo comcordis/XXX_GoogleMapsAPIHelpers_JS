@@ -30,7 +30,7 @@ XXX_GoogleMapsAPI_PlacesSuggestionSource.prototype.completedResponseHandler = fu
 		processedSuggestion.complement = '';
 		processedSuggestion.label = result.name;
 		processedSuggestion.data = result;
-		processedSuggestion.data.dataType = 'parsedPlacesResult';
+		processedSuggestion.data.dataType = 'googleMapsAPI_parsedPlacesResult';
 		
 		var valueAskingSuggestionsPosition = XXX_String.findFirstPosition(XXX_String.convertToLowerCase(processedSuggestion.suggestedValue), XXX_String.convertToLowerCase(processedSuggestion.valueAskingSuggestions));
 		

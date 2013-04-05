@@ -19,7 +19,7 @@ XXX_GoogleMapsAPI_GeocoderSuggestionSource.prototype.completedResponseHandler = 
 		processedSuggestion.complement = '';
 		processedSuggestion.label = processedSuggestion.suggestedValue;
 		processedSuggestion.data = result;
-		processedSuggestion.data.dataType = 'parsedGeocoderResult';
+		processedSuggestion.data.dataType = 'googleMapsAPI_parsedGeocoderResult';
 		
 		var valueAskingSuggestionsPosition = XXX_String.findFirstPosition(XXX_String.convertToLowerCase(processedSuggestion.suggestedValue), XXX_String.convertToLowerCase(processedSuggestion.valueAskingSuggestions));
 		

@@ -75,6 +75,7 @@ var XXX_GoogleMapsAPI_PlacesService =
 			{
 				type: 'rawPlaceString',
 				rawPlaceString: rawPlaceString,
+				languageCode: XXX_HTTP_Browser.firstLanguage.languageCode,
 				locationBias: locationBias,
 				completedCallback: false,
 				failedCallback: false,
@@ -96,7 +97,7 @@ var XXX_GoogleMapsAPI_PlacesService =
 			
 			this.placesRequestObjects.push(placesRequestObject);
 			
-					XXX_JS.errorNotification(1, 'New places request');
+			XXX_JS.errorNotification(1, 'New places request');
 					
 			if (this.nativePlacesService)
 			{
@@ -128,7 +129,8 @@ var XXX_GoogleMapsAPI_PlacesService =
 					var extraInformation =
 					{
 						rawPlaceString: this.placesRequestObjects[placesRequestObjectIndex].rawPlaceString,
-						locationBias: this.placesRequestObjects[placesRequestObjectIndex].locationBias
+						locationBias: this.placesRequestObjects[placesRequestObjectIndex].locationBias,
+						languageCode: this.placesRequestObjects[placesRequestObjectIndex].languageCode
 					};
 					
 					var parsedPlacesResults = this.parsePlacesResponse(results, extraInformation);
@@ -217,7 +219,7 @@ var XXX_GoogleMapsAPI_PlacesService =
 			
 			if (XXX_Type.isArray(extraInformation))
 			{
-				results = XXX_Array.merge(result, extraInformation);
+				result = XXX_Array.merge(result, extraInformation);
 			}
 			
 			// Native google LatLng object
