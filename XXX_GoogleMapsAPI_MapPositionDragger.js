@@ -11,7 +11,7 @@ var XXX_GoogleMapsAPI_MapPositionDragger = function (suggestionController, latit
 	XXX_CSS.setClass(this.elements.mapContainer, 'dialog');
 	XXX_CSS.setStyle(this.elements.mapContainer, 'width', '320px');
 	XXX_CSS.setStyle(this.elements.mapContainer, 'height', '180px');
-	XXX_DOM.appendChildNode(this.elements.parent, this.elements.mapContainer);
+	XXX_DOM.appendChildNode(XXX_DOM.getBody(), this.elements.mapContainer);
 	
 	this.geoPosition = false;
 	
