@@ -1,4 +1,4 @@
-var XXX_GoogleMapsAPI_MapPositionDragger = function (suggestionController, latitude, longitude)
+var XXX_GoogleMapsAPI_MapPositionDragger = function (suggestionController, latitude, longitude, mapContainer)
 {
 	this.elements = {};
 	
@@ -7,11 +7,19 @@ var XXX_GoogleMapsAPI_MapPositionDragger = function (suggestionController, latit
 	this.elements.input = suggestionController.elements.input;
 	this.elements.parent = XXX_DOM.getParent(this.elements.input);
 	
-	this.elements.mapContainer = XXX_DOM.createElementNode('div');
-	XXX_CSS.setClass(this.elements.mapContainer, 'dialog');
-	XXX_CSS.setStyle(this.elements.mapContainer, 'width', '320px');
-	XXX_CSS.setStyle(this.elements.mapContainer, 'height', '180px');
-	XXX_DOM.appendChildNode(XXX_DOM.getBody(), this.elements.mapContainer);
+	if (mapContainer)
+	{
+		this.elements.mapContainer = mapContainer;
+	}
+	else
+	{
+		this.elements.mapContainer = XXX_DOM.createElementNode('div');
+		XXX_CSS.setClass(this.elements.mapContainer, 'dialog');
+		XXX_CSS.setStyle(this.elements.mapContainer, 'width', '320px');
+		XXX_CSS.setStyle(this.elements.mapContainer, 'height', '180px');
+		XXX_DOM.appendChildNode(XXX_DOM.getBody(), this.elements.mapContainer);
+	
+	}
 	
 	this.geoPosition = false;
 	
@@ -177,5 +185,5 @@ XXX_GoogleMapsAPI_MapPositionDragger.prototype.hide = function ()
 
 XXX_GoogleMapsAPI_MapPositionDragger.prototype.reposition = function ()
 {
-	XXX_CSS_Position.nextToOffsetElement(this.elements.input, this.elements.mapContainer, ['topRight'], 10);
+	//XXX_CSS_Position.nextToOffsetElement(this.elements.input, this.elements.mapContainer, ['topRight'], 10);
 };
