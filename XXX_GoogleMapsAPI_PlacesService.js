@@ -44,6 +44,8 @@ var XXX_GoogleMapsAPI_PlacesService =
 			{			
 				if (previousPlacesRequestObject.rawPlaceString == rawPlaceString && previousPlacesRequestObject.responded)
 				{
+					XXX_JS.errorNotification(1, 'Previous places request');
+					
 					if (previousPlacesRequestObject.completed)
 					{
 						if (completedCallback)
@@ -58,8 +60,6 @@ var XXX_GoogleMapsAPI_PlacesService =
 							failedCallback();
 						}
 					}
-					
-					XXX_JS.errorNotification(1, 'Previous places request');
 					
 					foundPreviousPlacesRequestObject = true;
 					break;

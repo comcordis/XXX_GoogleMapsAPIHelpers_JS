@@ -5,60 +5,66 @@ var XXX_GoogleMapsAPI_PlacesSuggestionSource = function ()
 	this.failedCallback = false;
 };
 
-XXX_GoogleMapsAPI_PlacesSuggestionSource.prototype.completedResponseHandler = function (results)
+XXX_GoogleMapsAPI_PlacesSuggestionSource.prototype.completedResponseHandler = function (valueAskingSuggestions, results)
 {
-	var suggestions = [];
-		
-	for (var i = 0, iEnd = XXX_Array.getFirstLevelItemTotal(results); i < iEnd; ++i)
+	if (valueAskingSuggestions == this.valueAskingSuggestions)
 	{
-		var result = results[i];
-		
-		var processedSuggestion = {};
-		
-		var suggestedValue = '';
-		if (XXX_String.beginsWith(result.formattedAddressString, result.name))
+		var suggestions = [];
+			
+		for (var i = 0, iEnd = XXX_Array.getFirstLevelItemTotal(results); i < iEnd; ++i)
 		{
-			suggestedValue = result.formattedAddressString;
+			var result = results[i];
+			
+			var processedSuggestion = {};
+			
+			var suggestedValue = '';
+			if (XXX_String.beginsWith(result.formattedAddressString, result.name))
+			{
+				suggestedValue = result.formattedAddressString;
+			}
+			else
+			{
+				suggestedValue = result.name + ', ' + result.formattedAddressString;
+			}
+			
+			processedSuggestion.suggestedValue = suggestedValue;
+			processedSuggestion.valueAskingSuggestions = this.valueAskingSuggestions;
+			processedSuggestion.complement = '';
+			processedSuggestion.label = result.name;
+			processedSuggestion.data = result;
+			processedSuggestion.data.dataType = 'googleMapsAPI_parsedPlacesResult';
+			
+			var valueAskingSuggestionsPosition = XXX_String.findFirstPosition(XXX_String.convertToLowerCase(processedSuggestion.suggestedValue), XXX_String.convertToLowerCase(processedSuggestion.valueAskingSuggestions));
+			
+			if (valueAskingSuggestionsPosition === 0)
+			{
+				processedSuggestion.complement = XXX_String.getPart(processedSuggestion.suggestedValue, XXX_String.getCharacterLength(processedSuggestion.valueAskingSuggestions));
+			}
+			
+			suggestions.push(processedSuggestion);
 		}
-		else
+		
+		suggestions =
 		{
-			suggestedValue = result.name + ', ' + result.formattedAddressString;
-		}
-		
-		processedSuggestion.suggestedValue = suggestedValue;
-		processedSuggestion.valueAskingSuggestions = this.valueAskingSuggestions;
-		processedSuggestion.complement = '';
-		processedSuggestion.label = result.name;
-		processedSuggestion.data = result;
-		processedSuggestion.data.dataType = 'googleMapsAPI_parsedPlacesResult';
-		
-		var valueAskingSuggestionsPosition = XXX_String.findFirstPosition(XXX_String.convertToLowerCase(processedSuggestion.suggestedValue), XXX_String.convertToLowerCase(processedSuggestion.valueAskingSuggestions));
-		
-		if (valueAskingSuggestionsPosition === 0)
+			type: 'processed',
+			suggestions: suggestions
+		};
+			
+		if (this.completedCallback)
 		{
-			processedSuggestion.complement = XXX_String.getPart(processedSuggestion.suggestedValue, XXX_String.getCharacterLength(processedSuggestion.valueAskingSuggestions));
+			this.completedCallback(valueAskingSuggestions, suggestions);
 		}
-		
-		suggestions.push(processedSuggestion);
-	}
-	
-	suggestions =
-	{
-		type: 'processed',
-		suggestions: suggestions
-	};
-		
-	if (this.completedCallback)
-	{
-		this.completedCallback(suggestions);
 	}
 };
 
-XXX_GoogleMapsAPI_PlacesSuggestionSource.prototype.failedResponseHandler = function ()
+XXX_GoogleMapsAPI_PlacesSuggestionSource.prototype.failedResponseHandler = function (valueAskingSuggestions)
 {
-	if (this.failedCallback)
+	if (valueAskingSuggestions == this.valueAskingSuggestions)
 	{
-		this.failedCallback();
+		if (this.failedCallback)
+		{
+			this.failedCallback(valueAskingSuggestions);
+		}
 	}
 };
 
@@ -72,12 +78,12 @@ XXX_GoogleMapsAPI_PlacesSuggestionSource.prototype.requestSuggestions = function
 	
 	var completedCallback = function (results)
 	{
-		XXX_GoogleMapsAPI_PlacesSuggestionSource_instance.completedResponseHandler(results);
+		XXX_GoogleMapsAPI_PlacesSuggestionSource_instance.completedResponseHandler(valueAskingSuggestions, results);
 	};
 	
 	var failedCallback = function ()
 	{
-		XXX_GoogleMapsAPI_PlacesSuggestionSource_instance.failedResponseHandler();
+		XXX_GoogleMapsAPI_PlacesSuggestionSource_instance.failedResponseHandler(valueAskingSuggestions);
 	};
 	
 	XXX_GoogleMapsAPI_PlacesService.lookupPlace(valueAskingSuggestions, false, completedCallback, failedCallback);
