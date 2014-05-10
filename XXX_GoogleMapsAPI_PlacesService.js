@@ -20,9 +20,17 @@ var XXX_GoogleMapsAPI_PlacesService =
 	
 	initialize: function ()
 	{
-        var googleAttribution = XXX_DOM.get('googleMapsAPIAttribution');
+        var XXX_GoogleMapsAPI_attribution = XXX_DOM.get('XXX_GoogleMapsAPI_attribution');
         
-        this.nativePlacesService = new google.maps.places.PlacesService(googleAttribution);
+        if (!XXX_GoogleMapsAPI_attribution)
+        {
+        	XXX_GoogleMapsAPI_attribution = XXX_DOM.createElementNode('div');
+        	XXX_GoogleMapsAPI_attribution.id = 'XXX_GoogleMapsAPI_attribution';
+        	
+        	XXX_DOM.appendChildNode(XXX_DOM.getBody(), XXX_GoogleMapsAPI_attribution);
+        }
+        
+        this.nativePlacesService = new google.maps.places.PlacesService(XXX_GoogleMapsAPI_attribution);
 	},
 	
 	lookupPlace: function (rawPlaceString, locationBias, completedCallback, failedCallback)
