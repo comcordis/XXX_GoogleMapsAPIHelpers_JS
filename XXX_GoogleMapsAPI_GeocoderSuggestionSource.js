@@ -9,39 +9,20 @@ XXX_GoogleMapsAPI_GeocoderSuggestionSource.prototype.completedResponseHandler = 
 {
 	if (valueAskingSuggestions == this.valueAskingSuggestions)
 	{
-		var suggestions = [];
-			
 		for (var i = 0, iEnd = XXX_Array.getFirstLevelItemTotal(results); i < iEnd; ++i)
 		{
-			var result = results[i];
-			
-			var processedSuggestion = {};
-			processedSuggestion.suggestedValue = result.formattedAddressString;
-			processedSuggestion.valueAskingSuggestions = this.valueAskingSuggestions;
-			processedSuggestion.complement = '';
-			processedSuggestion.label = processedSuggestion.suggestedValue;
-			processedSuggestion.data = result;
-			processedSuggestion.data.dataType = 'googleMapsAPI_parsedGeocoderResult';
-			
-			var valueAskingSuggestionsPosition = XXX_String.findFirstPosition(XXX_String.convertToLowerCase(processedSuggestion.suggestedValue), XXX_String.convertToLowerCase(processedSuggestion.valueAskingSuggestions));
-			
-			if (valueAskingSuggestionsPosition === 0)
-			{
-				processedSuggestion.complement = XXX_String.getPart(processedSuggestion.suggestedValue, XXX_String.getCharacterLength(processedSuggestion.valueAskingSuggestions));
-			}
-			
-			suggestions.push(processedSuggestion);
+			results[i].value = results[i].formattedAddressString;
 		}
 		
-		suggestions =
-		{
-			type: 'processed',
-			suggestions: suggestions
-		};
-			
+		var simpleIndex = new XXX_Search_SimpleIndex('split', 'simplified', 'googleMapsAPI_parsedGeocoderResult');
+		simpleIndex.addSources(results);
+				
+		simpleIndex.executeQuery(this.valueAskingSuggestions);
+		var suggestionsResponse = simpleIndex.getSuggestionProviderSourceResponse();
+		
 		if (this.completedCallback)
 		{
-			this.completedCallback(valueAskingSuggestions, suggestions);
+			this.completedCallback(valueAskingSuggestions, suggestionsResponse);
 		}
 	}
 };

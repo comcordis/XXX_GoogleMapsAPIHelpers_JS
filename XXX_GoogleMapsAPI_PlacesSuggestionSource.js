@@ -8,51 +8,28 @@ var XXX_GoogleMapsAPI_PlacesSuggestionSource = function ()
 XXX_GoogleMapsAPI_PlacesSuggestionSource.prototype.completedResponseHandler = function (valueAskingSuggestions, results)
 {
 	if (valueAskingSuggestions == this.valueAskingSuggestions)
-	{
-		var suggestions = [];
-			
+	{	
 		for (var i = 0, iEnd = XXX_Array.getFirstLevelItemTotal(results); i < iEnd; ++i)
 		{
-			var result = results[i];
-			
-			var processedSuggestion = {};
-			
-			var suggestedValue = '';
-			if (XXX_String.beginsWith(result.formattedAddressString, result.name))
+			if (XXX_String.beginsWith(results[i].formattedAddressString, results[i].name))
 			{
-				suggestedValue = result.formattedAddressString;
+				results[i].value = results[i].formattedAddressString;
 			}
 			else
 			{
-				suggestedValue = result.name + ', ' + result.formattedAddressString;
+				results[i].value = results[i].name + ', ' + results[i].formattedAddressString;
 			}
-			
-			processedSuggestion.suggestedValue = suggestedValue;
-			processedSuggestion.valueAskingSuggestions = this.valueAskingSuggestions;
-			processedSuggestion.complement = '';
-			processedSuggestion.label = result.name;
-			processedSuggestion.data = result;
-			processedSuggestion.data.dataType = 'googleMapsAPI_parsedPlacesResult';
-			
-			var valueAskingSuggestionsPosition = XXX_String.findFirstPosition(XXX_String.convertToLowerCase(processedSuggestion.suggestedValue), XXX_String.convertToLowerCase(processedSuggestion.valueAskingSuggestions));
-			
-			if (valueAskingSuggestionsPosition === 0)
-			{
-				processedSuggestion.complement = XXX_String.getPart(processedSuggestion.suggestedValue, XXX_String.getCharacterLength(processedSuggestion.valueAskingSuggestions));
-			}
-			
-			suggestions.push(processedSuggestion);
 		}
 		
-		suggestions =
-		{
-			type: 'processed',
-			suggestions: suggestions
-		};
-			
+		var simpleIndex = new XXX_Search_SimpleIndex('split', 'simplified', 'googleMapsAPI_parsedPlacesResult');
+		simpleIndex.addSources(results);
+				
+		simpleIndex.executeQuery(this.valueAskingSuggestions);
+		var suggestionsResponse = simpleIndex.getSuggestionProviderSourceResponse();
+		
 		if (this.completedCallback)
 		{
-			this.completedCallback(valueAskingSuggestions, suggestions);
+			this.completedCallback(valueAskingSuggestions, suggestionsResponse);
 		}
 	}
 };
