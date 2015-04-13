@@ -1,0 +1,6 @@
+project:XXX_GoogleMapsAPIHelpers_JS
+deployEnvironment:development
+checkout:master
+commitHash:16518b964debf893ccb2bb589edf030ef1c24783
+timestamp:2015-04-13T09:44:22Z
+deployer:operations
